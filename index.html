@@ -23,24 +23,25 @@
       }
 
       if (permissionGranted) {
-        window.addEventListener("deviceorientation", function(event) {
-          const gyroData = {
-            alpha: event.alpha,
-            beta: event.beta,
-            gamma: event.gamma,
-            timestamp: Date.now()
-          };
-
-          fetch("http://localhost:3000/gyroscope", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify(gyroData)
-          }).catch(err => console.error("Failed to send gyroscope data:", err));
-        });
-
         alert("Gyroscope tracking started.");
+        setInterval(() => {
+          window.addEventListener("deviceorientation", function(event) {
+            const gyroData = {
+              alpha: event.alpha,
+              beta: event.beta,
+              gamma: event.gamma,
+              timestamp: Date.now()
+            };
+
+            fetch("https://your-backend.onrender.com/gyroscope", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify(gyroData)
+            }).catch(err => console.error("Failed to send gyroscope data:", err));
+          }, { once: true });
+        }, 200); // 0.2 seconds interval
       }
     });
   </script>
