@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gyroscope Tracker</title>
+</head>
+<body>
+  <h2>Gyroscope Tracking</h2>
+  <button id="startButton">Start Tracking</button>
+
+  <script>
+    document.getElementById('startButton').addEventListener('click', async () => {
+      let permissionGranted = false;
+
+      if (typeof DeviceMotionEvent !== "undefined" && typeof DeviceMotionEvent.requestPermission === "function") {
+        try {
+          const response = await DeviceMotionEvent.requestPermission();
+          permissionGranted = (response === 'granted');
+        } catch (error) {
+          alert("Permission denied. Cannot access gyroscope.");
+        }
+      } else {
+        permissionGranted = true;
+      }
+
+      if (permissionGranted) {
+        window.addEventListener("deviceorientation", function(event) {
+          const gyroData = {
+            alpha: event.alpha,
+            beta: event.beta,
+            gamma: event.gamma,
+            timestamp: Date.now()
+          };
+
+          fetch("http://localhost:3000/gyroscope", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(gyroData)
+          }).catch(err => console.error("Failed to send gyroscope data:", err));
+        });
+
+        alert("Gyroscope tracking started.");
+      }
+    });
+  </script>
+</body>
+</html>
