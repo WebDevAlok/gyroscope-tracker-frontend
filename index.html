@@ -26,7 +26,7 @@
         alert("Gyroscope tracking started.");
         let gyroscope = new Gyroscope({ frequency: 60 });
         
-        gyroscope.start();
+        
 
         setInterval(() => {
         gyroscope.addEventListener("reading", function(event) {
@@ -44,7 +44,7 @@
               },
               body: JSON.stringify(gyroData)
             }).catch(err => console.error("Failed to send gyroscope data:", err));
-          }, { once: true });
+          }, gyroscope.start(), { once: true });
         }, 200); // 0.2 seconds interval
       }
     });
