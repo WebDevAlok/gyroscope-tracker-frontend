@@ -24,12 +24,16 @@
 
       if (permissionGranted) {
         alert("Gyroscope tracking started.");
+        let gyroscope = new Gyroscope({ frequency: 60 });
+        
+        gyroscope.start();
+
         setInterval(() => {
-          window.addEventListener("deviceorientation", function(event) {
+        gyroscope.addEventListener("reading", function(event) {
             const gyroData = {
-              alpha: event.alpha,
-              beta: event.beta,
-              gamma: event.gamma,
+              alpha: gyroscope.x,
+              beta: gyroscope.y,
+              gamma: gyroscope.z,
               timestamp: Date.now()
             };
 
